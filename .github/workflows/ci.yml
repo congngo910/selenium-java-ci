@@ -1,104 +1,50 @@
-name: CI - Selenium Tests
+name: Selenium Gradle CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ "main" ]
   workflow_dispatch: # Cho phép chạy thủ công
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        java-version: [21]
+  selenium-test:
+    runs-on: windows-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Set up JDK ${{ matrix.java-version }}
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: ${{ matrix.java-version }}
-        distribution: 'temurin'
+        distribution: temurin
+        java-version: 17
         cache: 'gradle'
     
-    - name: Install Chrome and dependencies
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1
+    
+    - name: Run Selenium Tests
       run: |
-        # Install Chrome
-        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
-        
-        # Install Chrome dependencies
-        # Xử lý libasound2 cho Ubuntu 24.04 (đã đổi tên thành libasound2t64)
-        # Kiểm tra và cài đúng package theo phiên bản Ubuntu
-        if apt-cache show libasound2t64 >/dev/null 2>&1; then
-          # Ubuntu 24.04 - dùng libasound2t64
-          ASOUND_PKG="libasound2t64"
-        else
-          # Ubuntu 22.04 - dùng libasound2
-          ASOUND_PKG="libasound2"
-        fi
-        
-        sudo apt-get install -y \
-          libnss3 \
-          libatk-bridge2.0-0 \
-          libdrm2 \
-          libxkbcommon0 \
-          libxcomposite1 \
-          libxdamage1 \
-          libxfixes3 \
-          libxrandr2 \
-          libgbm1 \
-          $ASOUND_PKG \
-          libxss1 \
-          libgtk-3-0
-        
-        google-chrome --version
+        gradlew.bat clean test -Dbrowser=chrome -Denv=uat -Dheadless=true -Dtimeout=300 -Dpolling=500 -Dusername=${{ secrets.TEST_USERNAME }} -Dpassword=${{ secrets.TEST_PASSWORD }}
     
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    
-    - name: Run tests with Gradle
-      env:
-        BROWSER: chrome
-        ENV: uat
-        HEADLESS: true
-        TIMEOUT: 30
-        POLLING: 500
-        USERNAME: ${{ secrets.TEST_USERNAME }}
-        PASSWORD: ${{ secrets.TEST_PASSWORD }}
-      run: |
-        ./gradlew clean test \
-          -Dbrowser=chrome \
-          -Denv=uat \
-          -Dheadless=true \
-          -Dtimeout=300 \
-          -Dpolling=500 \
-          -Dusername=${{ secrets.TEST_USERNAME }} \
-          -Dpassword=${{ secrets.TEST_PASSWORD }}
-    
-    - name: Upload test reports
+    - name: Upload Test Report
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-reports-java-${{ matrix.java-version }}
+        name: test-report
         path: |
           test-output/**/*.html
           test-output/**/*.xml
           test-output/screenshots/**
         retention-days: 30
     
-    - name: Upload test logs
+    - name: Upload Test Logs
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-logs-java-${{ matrix.java-version }}
+        name: test-logs
         path: |
           logs/**/*.log
           test-output/**/*.log
@@ -110,7 +56,7 @@ jobs:
       with:
         files: |
           test-output/**/*.xml
-        check_name: Test Results (Java ${{ matrix.java-version }})
+        check_name: Test Results
         comment_mode: create new
         report_individual_runs: true
 
