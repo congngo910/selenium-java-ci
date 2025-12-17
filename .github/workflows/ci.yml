@@ -35,6 +35,12 @@ jobs:
         sudo apt-get install -y google-chrome-stable
         
         # Install Chrome dependencies
+        # Xử lý libasound2 cho Ubuntu 24.04 (đã đổi tên thành libasound2t64)
+        ASOUND_PKG="libasound2"
+        if ! apt-cache show libasound2 >/dev/null 2>&1; then
+          ASOUND_PKG="libasound2t64"
+        fi
+        
         sudo apt-get install -y \
           libnss3 \
           libatk-bridge2.0-0 \
@@ -45,7 +51,7 @@ jobs:
           libxfixes3 \
           libxrandr2 \
           libgbm1 \
-          libasound2 \
+          $ASOUND_PKG \
           libxss1 \
           libgtk-3-0
         
