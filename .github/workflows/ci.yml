@@ -36,9 +36,13 @@ jobs:
         
         # Install Chrome dependencies
         # Xử lý libasound2 cho Ubuntu 24.04 (đã đổi tên thành libasound2t64)
-        ASOUND_PKG="libasound2"
-        if ! apt-cache show libasound2 >/dev/null 2>&1; then
+        # Kiểm tra và cài đúng package theo phiên bản Ubuntu
+        if apt-cache show libasound2t64 >/dev/null 2>&1; then
+          # Ubuntu 24.04 - dùng libasound2t64
           ASOUND_PKG="libasound2t64"
+        else
+          # Ubuntu 22.04 - dùng libasound2
+          ASOUND_PKG="libasound2"
         fi
         
         sudo apt-get install -y \
