@@ -12,13 +12,13 @@ import java.time.Duration;
 public class RegisterPage extends CommonPage {
     LoginPage loginPage;
 
-    private By byTxtAccount = By.name("taiKhoan");;
-    private By byTxtPassword = By.id("matKhau");;
-    private By byTxtConfirmPassword = By.id("confirmPassWord");;
-    private By byTxtName = By.id("hoTen");;
-    private By byTxtEmail = By.id("email");;
-    private By byBtnRegister = By.xpath("//button[.='Đăng ký']");;
-    private By byMsgSuccess = By.id("swal2-title");;
+    private By byTxtAccount = By.name("taiKhoan");
+    private By byTxtPassword = By.id("matKhau");
+    private By byTxtConfirmPassword = By.id("confirmPassWord");
+    private By byTxtName = By.id("hoTen");
+    private By byTxtEmail = By.id("email");
+    private By byBtnRegister = By.xpath("//button[.='Đăng ký']");
+    private By byMsgSuccess = By.id("swal2-title");
     private By byTxtErrorAccount = By.xpath("//*[@id='taiKhoan-helper-text']");
     private By byTxtErrorPassword = By.xpath("//*[@id='matKhau-helper-text']");
     private By byTxtErrorConfirmPassword = By.xpath("//*[@id='confirmPassWord-helper-text']");

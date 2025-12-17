@@ -10,7 +10,7 @@ public class CommonPage extends BasePage {
 
     public CommonPage(WebDriver driver) {
         super(driver);
-        System.out.println("CommonPage driver = " + driver);
+        LOG.info("CommonPage driver = " + driver);
         topBarNavigation = new TopBarNavigation(driver);
     }
 
@@ -24,5 +24,7 @@ public class CommonPage extends BasePage {
     public HistoryPage navigateHistoryPage() {
         return topBarNavigation.navigateHistoryPage();
     }
-    public HomePage logOutPage(){return topBarNavigation.logOutPage();}
+    public HomePage logOutPage() {
+        return topBarNavigation.logOutPage();
+    }
 }

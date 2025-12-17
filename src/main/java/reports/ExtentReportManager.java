@@ -19,7 +19,7 @@ public class ExtentReportManager {
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>(); // mỗi thread 1 ExtentTest
     private static final String REPORT_PATH =  "test-output/ExtentReport_" +
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) +
-            ".html";;
+            ".html";
 //private static final String REPORT_PATH =
 //        "test-output/ExtentReport.html";
 

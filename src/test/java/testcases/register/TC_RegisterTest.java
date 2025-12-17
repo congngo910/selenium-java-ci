@@ -39,7 +39,7 @@ public class TC_RegisterTest extends BaseTest {
         //VP2: Verify new account login successfully
         ExtentReportManager.info("VP2: Verify new account login successfully");
         LOG.info("VP2: Verify new account login successfully");
-        registerPage.clickClose();;
+        registerPage.clickClose();
         registerPage.clickLoginLink();
         loginPage.login(newAcount, "Diqit0505@");
         ExtentReportManager.info("VP1: \"Đăng nhập thành công\" message displays");

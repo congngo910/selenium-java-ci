@@ -1,0 +1,106 @@
+name: CI - Selenium Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch: # Cho phép chạy thủ công
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        java-version: [17, 21]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin'
+        cache: 'gradle'
+    
+    - name: Install Chrome and dependencies
+      run: |
+        # Install Chrome
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        
+        # Install Chrome dependencies
+        sudo apt-get install -y \
+          libnss3 \
+          libatk-bridge2.0-0 \
+          libdrm2 \
+          libxkbcommon0 \
+          libxcomposite1 \
+          libxdamage1 \
+          libxfixes3 \
+          libxrandr2 \
+          libgbm1 \
+          libasound2 \
+          libxss1 \
+          libgtk-3-0
+        
+        google-chrome --version
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Run tests with Gradle
+      env:
+        BROWSER: chrome
+        ENV: uat
+        HEADLESS: true
+        TIMEOUT: 300
+        POLLING: 500
+        USERNAME: ${{ secrets.TEST_USERNAME }}
+        PASSWORD: ${{ secrets.TEST_PASSWORD }}
+      run: |
+        ./gradlew clean test \
+          -Dbrowser=chrome \
+          -Denv=uat \
+          -Dheadless=true \
+          -Dtimeout=300 \
+          -Dpolling=500 \
+          -Dusername=${{ secrets.TEST_USERNAME }} \
+          -Dpassword=${{ secrets.TEST_PASSWORD }}
+    
+    - name: Upload test reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports-java-${{ matrix.java-version }}
+        path: |
+          test-output/**/*.html
+          test-output/**/*.xml
+          test-output/screenshots/**
+        retention-days: 30
+    
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-logs-java-${{ matrix.java-version }}
+        path: |
+          logs/**/*.log
+          test-output/**/*.log
+        retention-days: 7
+    
+    - name: Publish Test Results
+      if: always()
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        files: |
+          test-output/**/*.xml
+        check_name: Test Results (Java ${{ matrix.java-version }})
+        comment_mode: create new
+        report_individual_runs: true
+

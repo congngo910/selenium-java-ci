@@ -1,5 +1,6 @@
 package base;
 
+import config.ConfigReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
@@ -21,7 +22,7 @@ public class BasePage {
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(300));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getInt("timeout")));
         this.waitUtil = new WaitUtil(driver);
 
     }

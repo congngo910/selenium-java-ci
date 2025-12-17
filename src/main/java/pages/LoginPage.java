@@ -4,16 +4,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import utils.WaitUtil;
 
 public class LoginPage extends CommonPage {
     HomePage homePage;
 
 
-    private By byTxtAccountLogin = By.id("taiKhoan");;
-    private By byTxtPasswordLogin = By.id("matKhau");;
-    private By byBtnLogin = By.xpath("//button[.='Đăng nhập']");;
-    private By byLblLoginMsg = By.id("swal2-title");;
+    private By byTxtAccountLogin = By.id("taiKhoan");
+    private By byTxtPasswordLogin = By.id("matKhau");
+    private By byBtnLogin = By.xpath("//button[.='Đăng nhập']");
+    private By byLblLoginMsg = By.id("swal2-title");
     private By byBtnClose = By.xpath("//button[contains(text(),'Đóng')]");
     private By byTxtErrorUsername = By.xpath("//*[@id='taiKhoan-helper-text']");
     private By byTxtErrorPassword = By.xpath("//*[@id='matKhau-helper-text']");
