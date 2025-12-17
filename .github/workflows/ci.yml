@@ -20,6 +20,9 @@ jobs:
       uses: browser-actions/setup-chrome@v1
 
     - name: Run Selenium Tests
+      env:
+        JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+        GRADLE_OPTS: -Dfile.encoding=UTF-8
       run: ./gradlew clean test -Dbrowser=chrome -Dheadless=true
     - name: Upload Test Report
       if: always()

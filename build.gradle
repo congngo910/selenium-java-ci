@@ -5,6 +5,15 @@ plugins {
 group = 'com.automation'
 version = '1.0-SNAPSHOT'
 
+// Cấu hình encoding UTF-8 để xử lý ký tự tiếng Việt
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
 repositories {
     mavenCentral()
 }
