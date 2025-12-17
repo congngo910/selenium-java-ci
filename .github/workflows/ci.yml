@@ -69,7 +69,7 @@ jobs:
         BROWSER: chrome
         ENV: uat
         HEADLESS: true
-        TIMEOUT: 300
+        TIMEOUT: 30
         POLLING: 500
         USERNAME: ${{ secrets.TEST_USERNAME }}
         PASSWORD: ${{ secrets.TEST_PASSWORD }}
