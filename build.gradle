@@ -10,9 +10,9 @@ repositories {
 }
 
 dependencies {
-    // Selenium 4.27.1 hỗ trợ CDP tốt hơn, nhưng vẫn có thể có cảnh báo với Chrome mới nhất
-    // Cảnh báo CDP version mismatch không ảnh hưởng đến test, Selenium sẽ tự động dùng version gần nhất
-    implementation("org.seleniumhq.selenium:selenium-java:4.27.1")
+    // Selenium 4.35.0 - version ổn định, cảnh báo CDP version mismatch không ảnh hưởng đến test
+    // Selenium sẽ tự động dùng CDP version gần nhất (139 thay vì 143)
+    implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
     implementation("org.testng:testng:7.11.0")
     implementation("org.apache.logging.log4j:log4j-core:2.25.1")
     implementation("org.apache.logging.log4j:log4j-api:2.25.1")
